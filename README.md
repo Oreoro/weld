@@ -264,6 +264,9 @@ isn't anymore. `weld why` names the exact rule behind any denial.
   gotchas, cookbook.
 - [docs/TUTORIAL.md](docs/TUTORIAL.md) — a walkthrough: real repo, real
   agent, real attacks, real denials.
+- [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) — wiring weld into Claude
+  Desktop, Claude Code, OpenAI Codex CLI, ChatGPT, Cursor, and other
+  MCP clients.
 - [CHANGELOG.md](CHANGELOG.md) — what changed and when.
 
 ## Development

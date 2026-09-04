@@ -13,17 +13,16 @@ Cargo.lock.orig
 
 # IDE / editor
 .idea/
-.vscode/
 *.swp
 *.swo
 .DS_Store
 
 # Local environment / secrets — never commit these
-.env
-.env.*
 *.key
 *.pem
 !examples/**/*.env.example
 
 # Weld runtime state (audit logs are per-workspace, not source)
 .weld/
+config.bat
+node_modules
