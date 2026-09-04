@@ -1,0 +1,19 @@
+# weld.rules — paranoid preset
+# Denies everything not explicitly required for the narrowest loop:
+# read project sources, run the test suite, nothing else.
+set project = ./**
+set test-bin = ./target/debug/**
+set hosts   = 127.0.0.1
+
+observe fs.read proc.exit
+control fs.write fs.delete fs.move fs.chmod exec net.connect net.recv vcs.* db.* backup.*
+
+deny fs.write(p)   if p not in project
+deny fs.delete(p)  if p not in project
+deny fs.move(p, q) if p not in project or q not in project
+deny exec(c)       if c ~ "curl *" or c ~ "wget *" or c ~ "nc *" or c ~ "ssh *"
+deny net.connect(h) if h not in hosts
+deny vcs.force_push(_)
+deny vcs.branch_delete(_)
+deny db.drop(_)
+deny backup.delete(_)

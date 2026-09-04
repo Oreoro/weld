@@ -1,0 +1,14 @@
+[package]
+name = "weld-lang"
+version.workspace = true
+description = "Policy language lexer, parser and typechecker for weld"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+weld-synth = { path = "../weld-synth" }

@@ -1,0 +1,14 @@
+[package]
+name = "weld-gate"
+version.workspace = true
+description = "Enforcement layer: MCP stdio proxy and shell shim for weld"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+weld-lang = { path = "../weld-lang" }
+weld-synth = { path = "../weld-synth" }
+weld-audit = { path = "../weld-audit" }
+serde = { workspace = true }
+serde_json = { workspace = true }

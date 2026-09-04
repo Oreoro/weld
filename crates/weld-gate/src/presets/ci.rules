@@ -1,0 +1,22 @@
+# weld.rules — CI preset
+# Machine-image workloads: allow builds and tests, deny network writes and
+# any force operation against the default branch.
+set project = ./**
+set secrets = **/.env* **/*.pem **/id_rsa*
+set locked  = main master release/*
+
+observe fs.read net.recv proc.exit
+control fs.write fs.delete exec net.connect vcs.*
+
+state tainted = seen fs.read(p) if p in secrets
+
+mark built if last exec("cargo build") == 0
+
+deny fs.write(p)     if p in secrets
+deny fs.delete(p)    if p not in project
+deny exec(c)         if c ~ "rm -rf /*"
+deny vcs.force_push(b) if b in locked
+deny vcs.branch_delete(b) if b in locked
+deny vcs.push(b)       if tainted
+set ci-hosts = api.github.com static.crates.io
+deny net.connect(h)    if h not in ci-hosts

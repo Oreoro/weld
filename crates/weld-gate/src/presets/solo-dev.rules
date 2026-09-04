@@ -1,0 +1,48 @@
+# weld.rules — solo-dev preset
+# Project-relative patterns (./…) are anchored to the directory weld runs in.
+
+set project = ./**
+set build   = ./{target,node_modules}/**
+set sacred  = ./.git/** **/migrations/**
+set secrets = **/.env* **/.ssh/** **/*.pem **/id_rsa* ~/.aws/** **/*.key
+set hosts   = api.github.com crates.io static.crates.io registry.npmjs.org 127.0.0.1
+set locked  = main release/*
+
+observe fs.read net.recv proc.exit
+control fs.write fs.delete fs.move fs.chmod exec net.connect vcs.* db.* backup.*
+
+state tainted = seen fs.read(p) if p in secrets
+state green   = last exec("cargo test") == 0
+state clean   = last exec("git status --porcelain") == ""
+state snapped = seen backup.create(_)
+
+mark done if green and clean
+
+# filesystem
+deny fs.delete(p)    if p not in project or p in sacred
+deny fs.write(p)     if p in secrets
+deny fs.move(p, q)   if p not in project or q not in project
+deny fs.delete(_)    if count fs.delete since exec("cargo test") > 50
+deny exec(c)         if c ~ "rm -rf *" and target(c) not in build
+
+# network — the exfiltration latch
+deny net.connect(h)  if h not in hosts or tainted
+deny exec(c)         if c ~ "curl *|wget *|nc *"
+
+# version control
+deny vcs.force_push(b)   if b in locked
+deny vcs.branch_delete(b) if b in locked
+deny vcs.push(b)         if b in locked and not green
+deny exec(c)             if c ~ "git reset --hard *" and not snapped
+deny exec(c)             if c ~ "git clean -fdx*"
+
+# database
+deny db.drop(_)
+deny db.query(q) if q ~ "DELETE FROM *" and not q ~ "*WHERE*"
+deny db.query(_) if env("ENV") == "production"
+
+# trace rules — what per-call allowlists cannot express
+deny backup.delete(_) ~> db.drop(_)
+deny backup.delete(_) ~> fs.delete(p) if p in sacred
+deny fs.read(p) if p in secrets ~> vcs.commit(_)
+deny exec(c) if c ~ "*migrate*" ~> fs.write(p) if p in sacred

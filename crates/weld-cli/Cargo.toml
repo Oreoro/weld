@@ -1,0 +1,20 @@
+[package]
+name = "weld-cli"
+version.workspace = true
+description = "weld command-line interface"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "weld"
+path = "src/main.rs"
+
+[dependencies]
+weld-lang = { path = "../weld-lang" }
+weld-synth = { path = "../weld-synth" }
+weld-gate = { path = "../weld-gate" }
+weld-audit = { path = "../weld-audit" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { workspace = true }

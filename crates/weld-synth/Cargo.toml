@@ -1,0 +1,14 @@
+[package]
+name = "weld-synth"
+version.workspace = true
+description = "Automata-based policy synthesis for weld"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+weld-lang = { path = "../weld-lang" }
+globset = { workspace = true }
+
+[dev-dependencies]
+proptest = "1"

@@ -1,0 +1,14 @@
+[package]
+name = "weld-audit"
+version.workspace = true
+description = "Tamper-evident hash-chained audit log for weld"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+weld-lang = { path = "../weld-lang" }
+weld-synth = { path = "../weld-synth" }
