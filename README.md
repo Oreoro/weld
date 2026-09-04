@@ -76,7 +76,7 @@ deny fs.read(p)      if p in restricted
 deny fs.write(p)     if p in secrets or p not in project
 deny fs.delete(p)    if p in sacred or p not in project
 deny fs.move(p, q)   if p in sacred or q not in project
-deny exec(c)         if c ~ "curl *|wget *"
+deny exec(c)         if c ~ "curl *" or c ~ "wget *"
 deny net.connect(h)  if h not in hosts or tainted
 deny fs.read(p) if p in secrets ~> net.connect(_)      # exfil trace
 ```
