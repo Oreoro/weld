@@ -27,7 +27,7 @@ deny exec(c)         if c ~ "rm -rf *" and target(c) not in build
 
 # network — the exfiltration latch
 deny net.connect(h)  if h not in hosts or tainted
-deny exec(c)         if c ~ "curl *|wget *|nc *"
+deny exec(c)         if c ~ "curl *" or c ~ "wget *" or c ~ "nc *"
 
 # version control
 deny vcs.force_push(b)   if b in locked
